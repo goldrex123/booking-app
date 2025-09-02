@@ -1,13 +1,19 @@
+/* Base Resets and Variables */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --primary-color: #89cff0; /* Baby Blue */
+  --primary-hover-color: #70b8d8; /* Slightly darker blue */
+  --background-color: #fdfdff; /* Very light off-white/blue */
+  --card-background: #ffffff;
+  --text-color: #3c4043; /* Softer black */
+  --border-color: #e8e8e8;
+  --border-radius: 0.8rem;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
 html,
@@ -17,26 +23,80 @@ body {
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 a {
-  color: inherit;
+  color: var(--primary-color);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--primary-hover-color);
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+/* --- Component Overrides --- */
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  font-weight: bold;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+  background-color: var(--primary-hover-color) !important;
+  border-color: var(--primary-hover-color) !important;
+  box-shadow: none !important;
+  transform: translateY(-2px);
+}
+
+/* Cards */
+.card {
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  box-shadow: none;
+  transition: all 0.2s ease-in-out;
+}
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--card-shadow);
+}
+
+/* Navbar */
+.navbar.bg-light {
+  background-color: var(--card-background) !important;
+  box-shadow: var(--card-shadow);
+}
+
+/* Calendar */
+.rbc-event {
+    background-color: var(--primary-color);
+    border-radius: 0.4rem;
+}
+
+.rbc-toolbar button.rbc-active {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+.rbc-toolbar button:hover {
+    background-color: #f0f0f0;
+}
+
+/* Datepicker */
+.react-datepicker {
+    border-radius: var(--border-radius) !important;
+    border: 1px solid var(--border-color) !important;
+}
+.react-datepicker__header {
+    background-color: var(--background-color) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    border-top-left-radius: var(--border-radius) !important;
+    border-top-right-radius: var(--border-radius) !important;
+}
+.react-datepicker__day--selected, .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item--selected {
+    background-color: var(--primary-color) !important;
 }
