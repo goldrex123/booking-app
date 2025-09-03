@@ -4,6 +4,8 @@ import { Calendar, dateFnsLocalizer, Event, View } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay } from 'date-fns';
 import ko from 'date-fns/locale/ko';
 import React, { useState } from 'react';
+import BookingModal from './BookingModal';
+import CustomToolbar from './CustomToolbar';
 
 // Setup the localizer by providing the functions we want to use.
 const locales = {
@@ -32,6 +34,7 @@ const BookingCalendar = ({ bookings }: BookingCalendarProps) => {
   // State to manage the current date and view of the calendar
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState<View>('month'); // Default view is 'month'
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
 
   // Transform booking data into the format required by react-big-calendar
   const events: Event[] = bookings.map(booking => ({
@@ -50,27 +53,29 @@ const BookingCalendar = ({ bookings }: BookingCalendarProps) => {
         endAccessor="end"
         style={{ height: '100%' }}
         culture="ko"
-        messages={{
-            next: "다음",
-            previous: "이전",
-            today: "오늘",
-            month: "월",
-            week: "주",
-            day: "일",
-            agenda: "목록",
-            date: "날짜",
-            time: "시간",
-            event: "이벤트",
-            noEventsInRange: "이 범위에 이벤트가 없습니다.",
-            showMore: total => `+${total} 더 보기`
+        components={{
+          toolbar: CustomToolbar,
         }}
-        toolbar={true}
         // Add these props to make the calendar interactive
         date={date}
         view={view}
         onNavigate={newDate => setDate(newDate)}
         onView={newView => setView(newView)}
+        onSelectEvent={event => {
+          const booking = bookings.find(b => b.id === event.resource);
+          if (booking) {
+            setSelectedBooking(booking);
+          }
+        }}
       />
+      {selectedBooking && (
+        <BookingModal
+          show={!!selectedBooking}
+          onHide={() => setSelectedBooking(null)}
+          booking={selectedBooking}
+          mode="details"
+        />
+      )}
     </div>
   );
 };

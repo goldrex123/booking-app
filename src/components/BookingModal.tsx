@@ -12,15 +12,24 @@ interface Resource {
   name: string;
 }
 
+interface Booking {
+  id: number;
+  resource_name: string;
+  start_time: string;
+  end_time: string;
+}
+
 interface BookingModalProps {
   show: boolean;
   onHide: () => void;
-  resource: Resource | null;
-  resourceType: 'room' | 'vehicle' | null;
-  onBookingSuccess: () => void;
+  resource?: Resource | null;
+  resourceType?: 'room' | 'vehicle' | null;
+  onBookingSuccess?: () => void;
+  booking?: Booking | null;
+  mode: 'create' | 'details';
 }
 
-const BookingModal = ({ show, onHide, resource, resourceType, onBookingSuccess }: BookingModalProps) => {
+const BookingModal = ({ show, onHide, resource, resourceType, onBookingSuccess, booking, mode }: BookingModalProps) => {
   const [startTime, setStartTime] = useState<Date | null>(new Date());
   const [endTime, setEndTime] = useState<Date | null>(new Date());
   const [error, setError] = useState<string | null>(null);
@@ -79,57 +88,75 @@ const BookingModal = ({ show, onHide, resource, resourceType, onBookingSuccess }
     <Modal show={show} onHide={handleOnHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>
-          {resource ? `'${resource.name}' 예약` : '예약'}
+          {mode === 'create' && resource ? `'${resource.name}' 예약` : '예약 상세 정보'}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {error && <Alert variant="danger">{error}</Alert>}
-        <Form>
-          <Form.Group className="mb-3">
-            <Form.Label>시작 시간</Form.Label>
-            <DatePicker
-              selected={startTime}
-              onChange={(date) => setStartTime(date)}
-              showTimeSelect
-              dateFormat="yyyy/MM/dd, h:mm aa"
-              className="form-control"
-              locale="ko"
-            />
-          </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label>종료 시간</Form.Label>
-            <DatePicker
-              selected={endTime}
-              onChange={(date) => setEndTime(date)}
-              showTimeSelect
-              dateFormat="yyyy/MM/dd, h:mm aa"
-              className="form-control"
-              locale="ko"
-            />
-          </Form.Group>
-        </Form>
+        {mode === 'create' ? (
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>시작 시간</Form.Label>
+              <DatePicker
+                selected={startTime}
+                onChange={(date) => setStartTime(date)}
+                showTimeSelect
+                dateFormat="yyyy/MM/dd, h:mm aa"
+                className="form-control"
+                locale="ko"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>종료 시간</Form.Label>
+              <DatePicker
+                selected={endTime}
+                onChange={(date) => setEndTime(date)}
+                showTimeSelect
+                dateFormat="yyyy/MM/dd, h:mm aa"
+                className="form-control"
+                locale="ko"
+              />
+            </Form.Group>
+          </Form>
+        ) : (
+          booking && (
+            <div>
+              <p><strong>자원:</strong> {booking.resource_name}</p>
+              <p><strong>시작 시간:</strong> {new Date(booking.start_time).toLocaleString()}</p>
+              <p><strong>종료 시간:</strong> {new Date(booking.end_time).toLocaleString()}</p>
+            </div>
+          )
+        )}
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleOnHide} disabled={isSubmitting}>
-          취소
-        </Button>
-        <Button variant="primary" onClick={handleBooking} disabled={isSubmitting}>
-          {isSubmitting ? (
-            <>
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
-              {' '}
-              예약 중...
-            </>
-          ) : (
-            '예약 확정'
-          )}
-        </Button>
+        {mode === 'create' ? (
+          <>
+            <Button variant="secondary" onClick={handleOnHide} disabled={isSubmitting}>
+              취소
+            </Button>
+            <Button variant="primary" onClick={handleBooking} disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />
+                  {' '}
+                  예약 중...
+                </>
+              ) : (
+                '예약 확정'
+              )}
+            </Button>
+          </>
+        ) : (
+          <Button variant="secondary" onClick={handleOnHide}>
+            닫기
+          </Button>
+        )}
       </Modal.Footer>
     </Modal>
   );
