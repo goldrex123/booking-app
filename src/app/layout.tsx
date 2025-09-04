@@ -4,8 +4,7 @@ import "./globals.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import Header from "@/components/Header";
-import { Container } from "react-bootstrap";
+import { Providers } from "@/components/Providers";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -25,12 +24,9 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={nunito.className}>
-        <Header />
-        <main>
-          <Container className="mt-4">
-            {children}
-          </Container>
-        </main>
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

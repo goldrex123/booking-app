@@ -1,10 +1,13 @@
 'use client';
 
 import React from 'react';
-import { Container, Nav, Navbar } from 'react-bootstrap';
+import { Container, Nav, Navbar, Button } from 'react-bootstrap';
 import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
 
 const Header = () => {
+  const { isAuthenticated, logout } = useAuth();
+
   return (
     <Navbar bg="light" expand="lg" className="mb-4">
       <Container>
@@ -20,6 +23,15 @@ const Header = () => {
             <Link href="/bookings" passHref legacyBehavior>
               <Nav.Link>내 예약</Nav.Link>
             </Link>
+          </Nav>
+          <Nav>
+            {isAuthenticated ? (
+              <Button variant="outline-danger" onClick={logout}>로그아웃</Button>
+            ) : (
+              <Link href="/login" passHref legacyBehavior>
+                <Button variant="outline-primary">로그인</Button>
+              </Link>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>
