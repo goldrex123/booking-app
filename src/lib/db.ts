@@ -4,7 +4,7 @@ import path from 'path';
 
 // This function opens the database connection.
 // It's designed to be called once and the promise reused.
-async function openDb() {
+export async function openDb() {
   const dbPath = path.join(process.cwd(), 'database');
   // The setup script will create this directory.
 

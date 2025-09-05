@@ -20,6 +20,7 @@ interface Booking {
   resource_name: string;
   start_time: string;
   end_time: string;
+  user_name?: string;
 }
 
 const BookingsPage = () => {

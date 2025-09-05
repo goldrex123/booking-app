@@ -4,10 +4,10 @@ import { dbPromise } from '@/lib/db';
 export async function POST(request: Request) {
   try {
     const db = await dbPromise;
-    const { resourceType, resourceId, startTime, endTime } = await request.json();
+    const { resourceType, resourceId, startTime, endTime, userId } = await request.json();
 
     // Basic validation
-    if (!resourceType || !resourceId || !startTime || !endTime) {
+    if (!resourceType || !resourceId || !startTime || !endTime || !userId) {
       return new NextResponse(
         JSON.stringify({ message: 'Missing required fields' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
@@ -43,8 +43,8 @@ export async function POST(request: Request) {
 
     // Insert the new booking
     const result = await db.run(
-      'INSERT INTO bookings (resource_type, resource_id, start_time, end_time) VALUES (?, ?, ?, ?)',
-      [resourceType, resourceId, startISO, endISO]
+      'INSERT INTO bookings (resource_type, resource_id, start_time, end_time, user_id) VALUES (?, ?, ?, ?, ?)',
+      [resourceType, resourceId, startISO, endISO, userId]
     );
 
     return NextResponse.json({ message: '예약이 성공적으로 완료되었습니다.', bookingId: result.lastID });

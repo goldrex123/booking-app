@@ -10,22 +10,28 @@ export async function GET() {
         b.start_time,
         b.end_time,
         b.resource_type,
-        r.name AS resource_name
+        r.name AS resource_name,
+        u.name AS user_name
       FROM
         bookings b
       JOIN
         rooms r ON b.resource_id = r.id AND b.resource_type = 'room'
+      LEFT JOIN
+        users u ON b.user_id = u.id
       UNION ALL
       SELECT
         b.id,
         b.start_time,
         b.end_time,
         b.resource_type,
-        v.name AS resource_name
+        v.name AS resource_name,
+        u.name AS user_name
       FROM
         bookings b
       JOIN
         vehicles v ON b.resource_id = v.id AND b.resource_type = 'vehicle'
+      LEFT JOIN
+        users u ON b.user_id = u.id
       ORDER BY
         b.start_time DESC;
     `);

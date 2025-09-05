@@ -24,6 +24,7 @@ interface Booking {
   resource_name: string;
   start_time: string;
   end_time: string;
+  user_name?: string;
 }
 
 interface BookingCalendarProps {
@@ -38,7 +39,7 @@ const BookingCalendar = ({ bookings }: BookingCalendarProps) => {
 
   // Transform booking data into the format required by react-big-calendar
   const events: Event[] = bookings.map(booking => ({
-    title: booking.resource_name,
+    title: `${booking.resource_name} (예약자: ${booking.user_name || '미지정'})`,
     start: new Date(booking.start_time),
     end: new Date(booking.end_time),
     resource: booking.id, // Attach original booking id

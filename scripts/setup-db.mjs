@@ -42,14 +42,23 @@ async function setup() {
       plate_number TEXT UNIQUE
     );
 
+    -- Create users table
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL UNIQUE,
+      password TEXT NOT NULL
+    );
+
     -- Create bookings table
     CREATE TABLE IF NOT EXISTS bookings (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       resource_type TEXT NOT NULL CHECK(resource_type IN ('room', 'vehicle')),
       resource_id INTEGER NOT NULL,
-      user_id INTEGER, -- Will link to a users table later
+      user_id INTEGER,
       start_time TEXT NOT NULL,
-      end_time TEXT NOT NULL
+      end_time TEXT NOT NULL,
+      FOREIGN KEY (user_id) REFERENCES users(id)
     );
   `);
 

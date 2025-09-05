@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Modal, Button, Form, Alert, Spinner } from 'react-bootstrap';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import ko from 'date-fns/locale/ko';
+import { useAuth } from '@/context/AuthContext';
 
 registerLocale('ko', ko);
 
@@ -17,6 +18,7 @@ interface Booking {
   resource_name: string;
   start_time: string;
   end_time: string;
+  user_name?: string;
 }
 
 interface BookingModalProps {
@@ -34,6 +36,7 @@ const BookingModal = ({ show, onHide, resource, resourceType, onBookingSuccess, 
   const [endTime, setEndTime] = useState<Date | null>(new Date());
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useAuth();
 
   const handleBooking = async () => {
     if (!resource || !startTime || !endTime) {
@@ -59,6 +62,7 @@ const BookingModal = ({ show, onHide, resource, resourceType, onBookingSuccess, 
           resourceId: resource.id,
           startTime,
           endTime,
+          userId: user?.id,
         }),
       });
 
@@ -122,6 +126,7 @@ const BookingModal = ({ show, onHide, resource, resourceType, onBookingSuccess, 
           booking && (
             <div>
               <p><strong>자원:</strong> {booking.resource_name}</p>
+              <p><strong>예약자:</strong> {booking.user_name || '미지정'}</p>
               <p><strong>시작 시간:</strong> {new Date(booking.start_time).toLocaleString()}</p>
               <p><strong>종료 시간:</strong> {new Date(booking.end_time).toLocaleString()}</p>
             </div>
